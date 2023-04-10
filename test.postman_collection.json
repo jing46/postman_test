@@ -1,0 +1,265 @@
+{
+	"info": {
+		"_postman_id": "968990a6-4cc3-41dc-80c1-fb9da1da08f8",
+		"name": "test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3835329"
+	},
+	"item": [
+		{
+			"name": "登录",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//设置用户登录的token 为全局变量；\r",
+							"// 首先需要先新建一个Global 全局变量\r",
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setGlobalVariable(\"token\", jsonData.data);\r",
+							"//这里的jsonData. 后面的路径result.token  根据你们具体的接口返回的body体的路径层级来调整\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"data\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"xuanzhizhen\",\"password\":\"xuanzhizhen\",\"client\":\"console\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://prod.360ljk.com/api/object/authenticateByUsername",
+					"protocol": "https",
+					"host": [
+						"prod",
+						"360ljk",
+						"com"
+					],
+					"path": [
+						"api",
+						"object",
+						"authenticateByUsername"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "获取订单",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Your test name\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var jsonDicData =jsonData.data.list[0].orderNum;\r",
+							"    pm.expect(jsonDicData).to.eql(\"YYSC1678202823609\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"//// 断言状态码 200-202 区间\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 202]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code name has string\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Sso-Token",
+						"value": "{{token}}",
+						"type": "default"
+					},
+					{
+						"key": "Access-Token",
+						"value": "{{token}}",
+						"type": "default"
+					},
+					{
+						"key": "client-code",
+						"value": "ljk_admin",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"pageNum\": 1,\r\n    \"pageSize\": 10,\r\n    \"total\": 0,\r\n    \"status\": null,\r\n    \"accountId\": \"\",\r\n    \"createTime\": [\r\n        \"2023-03-07\",\r\n        \"2023-03-07\"\r\n    ],\r\n    \"startTime\": \"2023-03-07 00:00:00\",\r\n    \"endTime\": \"2023-03-07 23:59:59\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://prod.360ljk.com/zuul/live-app/order/list",
+					"protocol": "https",
+					"host": [
+						"prod",
+						"360ljk",
+						"com"
+					],
+					"path": [
+						"zuul",
+						"live-app",
+						"order",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "返回菜单",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"商品管理\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Sso-Token",
+						"value": "{{token}}",
+						"type": "default"
+					},
+					{
+						"key": "Access-Token",
+						"value": "{{token}}",
+						"type": "default"
+					},
+					{
+						"key": "client-code",
+						"value": "ljk_admin",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"client\": \"console\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://prod.360ljk.com/zuul/live-app/module/account",
+					"protocol": "https",
+					"host": [
+						"prod",
+						"360ljk",
+						"com"
+					],
+					"path": [
+						"zuul",
+						"live-app",
+						"module",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "获取订单列表状态",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"followRedirects": false,
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Sso-Token",
+						"value": "{{login}}",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"pageNum\":1,\"pageSize\":10,\"total\":0,\"status\":null,\"accountId\":\"\",\"createTime\":[\"2023-03-08\",\"2023-03-08\"],\"startTime\":\"2023-03-08 00:00:00\",\"endTime\":\"2023-03-08 23:59:59\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://prod.360ljk.com/zuul/live-app/order/statusCount",
+					"protocol": "https",
+					"host": [
+						"prod",
+						"360ljk",
+						"com"
+					],
+					"path": [
+						"zuul",
+						"live-app",
+						"order",
+						"statusCount"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
